@@ -9,7 +9,7 @@
 
 - Usage:
 ```python
-invert(object_to_invert, circle_of_inversion)
+invert(object_to_invert, circle_of_inversion, seg)
 
 # object_to_invert can be of the following types:
 [[tuple, list, np.ndarray], [Dot], [Line], [Circle]]
@@ -17,4 +17,6 @@ invert(object_to_invert, circle_of_inversion)
 # circle_of_inversion must be of the type Circle
 
 # Depending on the object to be inverted, the invert function can return any of the above types
+
+# The seg parameter is to be used if you want the line that you input to be a infinite line, or a line segment.
 ```

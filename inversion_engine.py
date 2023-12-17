@@ -3,7 +3,9 @@ from numpy import *
 
 
 def invert(
-    object: tuple | list | np.ndarray | Dot | Line | Circle, circle: Circle = Circle(1)
+    object: tuple | list | np.ndarray | Dot | Line | Circle,
+    circle: Circle = Circle(1),
+    seg=False,
 ):
     def calculate_intersection_point_line_line(p1, p2, q1, q2):
         # Convert the points to numpy arrays for easier calculations
@@ -83,7 +85,6 @@ def invert(
         p2_x, p2_y, _ = p2
 
         verti = p2_x - p1_x == 0
-
         if (verti and p1_x == O_x) or round(
             ((p2_y - p1_y) / (p2_x - p1_x)) * (O_x - p1_x) + p1_y, 9
         ) == round(O_y, 9):
@@ -102,8 +103,17 @@ def invert(
         C_x = (O_x + Q_p_x) / 2
         C_y = (O_y + Q_p_y) / 2
         r = sqrt((C_x - O_x) ** 2 + (C_y - O_y) ** 2)
-        new_circle = Circle(r, color=YELLOW)
-        new_circle.move_to([C_x, C_y, 0])
+
+        if not seg:
+            new_circle = Circle(r, color=YELLOW)
+            new_circle.move_to([C_x, C_y, 0])
+            return new_circle
+
+        p1_p = invert(p1, circle)
+        p2_p = invert(p2, circle)
+        new_circle = ArcBetweenPoints(
+            p2_p, p1_p, radius=r, arc_center=[C_x, C_y, 0], color=YELLOW
+        )
         return new_circle
 
     if type(object) is Circle:
