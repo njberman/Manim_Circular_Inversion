@@ -6,6 +6,7 @@ def invert(
     object: tuple | list | np.ndarray | Dot | Line | Circle,
     circle: Circle = Circle(1),
     seg=False,
+    color=YELLOW,
 ):
     def calculate_intersection_point_line_line(p1, p2, q1, q2):
         # Convert the points to numpy arrays for easier calculations
@@ -76,7 +77,7 @@ def invert(
     if type(object) is Dot:
         x, y, _ = object.get_center()
         c_p = invert(object.get_center(), circle)
-        return Dot(c_p, color=YELLOW)
+        return Dot(c_p, color=color)
 
     if type(object) is Line:
         p1, p2 = object.get_anchors()
@@ -88,7 +89,7 @@ def invert(
         if (verti and p1_x == O_x) or round(
             ((p2_y - p1_y) / (p2_x - p1_x)) * (O_x - p1_x) + p1_y, 9
         ) == round(O_y, 9):
-            return Line(p1, p2, color=YELLOW)
+            return Line(p1, p2, color=color)
 
         line_vector = np.array(p1) - np.array(p2)
         perpendicular_vector = np.array([-line_vector[1], line_vector[0], 0])
@@ -105,14 +106,14 @@ def invert(
         r = sqrt((C_x - O_x) ** 2 + (C_y - O_y) ** 2)
 
         if not seg:
-            new_circle = Circle(r, color=YELLOW)
+            new_circle = Circle(r, color=color)
             new_circle.move_to([C_x, C_y, 0])
             return new_circle
 
         p1_p = invert(p1, circle)
         p2_p = invert(p2, circle)
         new_circle = ArcBetweenPoints(
-            p2_p, p1_p, radius=r, arc_center=[C_x, C_y, 0], color=YELLOW
+            p2_p, p1_p, radius=r, arc_center=[C_x, C_y, 0], color=color
         )
         return new_circle
 
@@ -128,13 +129,13 @@ def invert(
                 return Line(
                     np.array((Q_x, 40, 0)) + O,
                     np.array((Q_x, -40, 0)) + O,
-                    color=YELLOW,
+                    color=color,
                 )
 
             m_OQ_p = Q_y / Q_x
             m_perp = -1 / m_OQ_p
             eq_perp = lambda x: m_perp * (x - Q_x) + Q_y
-            return Line((-40, eq_perp(-40), 0), (40, eq_perp(40), 0), color=YELLOW)
+            return Line((-40, eq_perp(-40), 0), (40, eq_perp(40), 0), color=color)
 
         eq = lambda x: ((O_y - C_y) / (O_x - C_x)) * (x - C_x) + C_y
         Q, P = calculate_intersection_point_line_circle(
@@ -151,6 +152,6 @@ def invert(
         P_P_x, P_P_y, _ = P_p
 
         pos = np.array(((Q_P_x + P_P_x) / 2, (Q_P_y + P_P_y) / 2, 0))
-        C = Circle(sqrt((P_P_x - Q_P_x) ** 2 + (P_P_y - Q_P_y) ** 2) / 2, color=YELLOW)
+        C = Circle(sqrt((P_P_x - Q_P_x) ** 2 + (P_P_y - Q_P_y) ** 2) / 2, color=color)
         C.move_to(pos)
         return C
