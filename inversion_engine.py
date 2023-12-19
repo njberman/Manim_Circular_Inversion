@@ -134,7 +134,7 @@ def invert(
                     color=color,
                 )
 
-            m_OQ_p = Q_y / Q_x
+            m_OQ_p = (Q_y - O_y) / (Q_x - O_x)
             m_perp = -1 / m_OQ_p
             eq_perp = lambda x: m_perp * (x - Q_x) + Q_y
             return Line((-40, eq_perp(-40), 0), (40, eq_perp(40), 0), color=color)
