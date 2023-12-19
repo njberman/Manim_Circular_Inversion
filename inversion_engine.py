@@ -120,7 +120,9 @@ def invert(
     if type(object) is Circle:
         C = object.get_center()
         C_x, C_y, _ = C
-        if round(O_x**2 + O_y**2, 9) == round(object.radius**2, 9):
+        if round((O_x - C_x) ** 2 + (O_y - C_y) ** 2, 9) == round(
+            object.radius**2, 9
+        ):
             Q = np.array([2 * C_x - O_x, 2 * C_y - O_y, 0])
             Q_p = invert(Q, circle)
             Q_x, Q_y, _ = Q_p
